@@ -1,42 +1,27 @@
 const API = "http://localhost:3001/toys";
 
 function ToyCard({ toy, donateToy, likeToy }) {
-
   const handleLike = () => {
-    const updatedLikes = toy.likes + 1;
-
     fetch(`${API}/${toy.id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ likes: updatedLikes })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ likes: toy.likes + 1 })
     })
       .then(res => res.json())
-      .then(updatedToy => {
-        likeToy(updatedToy);
-      })
-      .catch(err => console.error("Error liking toy:", err));
+      .then(updatedToy => likeToy(updatedToy));
   };
 
   return (
     <div className="card">
       <h2>{toy.name}</h2>
-      <img 
-        src={toy.image} 
-        alt={toy.name} 
-        className="toy-avatar" 
-      />
+      <img src={toy.image} alt={toy.name} className="toy-avatar" />
       <p>{toy.likes} Likes</p>
       
       <button className="like-btn" onClick={handleLike}>
         Like ❤️
       </button>
       
-      <button 
-        onClick={() => donateToy(toy.id)} 
-        className="del-btn"
-      >
+      <button className="del-btn" onClick={() => donateToy(toy.id)}>
         Donate to GoodWill
       </button>
     </div>

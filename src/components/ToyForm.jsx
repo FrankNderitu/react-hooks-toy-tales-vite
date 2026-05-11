@@ -9,33 +9,22 @@ function ToyForm({ addToy }) {
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newToy = {
-      ...formData,
-      likes: 0
-    };
-
     fetch(API, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(newToy)
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...formData, likes: 0 })
     })
       .then(res => res.json())
-      .then(createdToy => {
-        addToy(createdToy);
+      .then(newToy => {
+        addToy(newToy);
         setFormData({ name: "", image: "" });
-      })
-      .catch(err => console.error("Error creating toy:", err));
+      });
   };
 
   return (

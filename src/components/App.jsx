@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import ToyForm from './components/ToyForm';
-import ToyContainer from './components/ToyContainer';
+import ToyForm from './ToyForm';
+import ToyContainer from './ToyContainer';
 
-const API = "http://localhost:3001/toys";   // Change to 3000 if your json-server uses that port
+const API = "http://localhost:3001/toys";
 
 function App() {
   const [toys, setToys] = useState([]);
 
-  // GET - Fetch all toys on load
   useEffect(() => {
     fetch(API)
       .then(res => res.json())
@@ -15,27 +14,21 @@ function App() {
       .catch(err => console.error("Error fetching toys:", err));
   }, []);
 
-  // POST - Add new toy
   const addToy = (newToy) => {
-    setToys([...toys, newToy]);
+    setToys(prev => [...prev, newToy]);
   };
 
-  // DELETE - Donate toy
   const donateToy = (id) => {
-    fetch(`${API}/${id}`, {
-      method: "DELETE"
-    })
+    fetch(`${API}/${id}`, { method: "DELETE" })
       .then(() => {
-        setToys(toys.filter(toy => toy.id !== id));
-      })
-      .catch(err => console.error("Error deleting toy:", err));
+        setToys(prev => prev.filter(toy => toy.id !== id));
+      });
   };
 
-  // PATCH - Like a toy
   const likeToy = (updatedToy) => {
-    setToys(toys.map(toy => 
-      toy.id === updatedToy.id ? updatedToy : toy
-    ));
+    setToys(prev => 
+      prev.map(toy => toy.id === updatedToy.id ? updatedToy : toy)
+    );
   };
 
   return (
@@ -45,12 +38,7 @@ function App() {
       </header>
       
       <ToyForm addToy={addToy} />
-      
-      <ToyContainer 
-        toys={toys} 
-        donateToy={donateToy} 
-        likeToy={likeToy} 
-      />
+      <ToyContainer toys={toys} donateToy={donateToy} likeToy={likeToy} />
     </div>
   );
 }
