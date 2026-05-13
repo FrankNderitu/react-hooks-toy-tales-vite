@@ -1,18 +1,17 @@
-import ToyCard from './ToyCard';
+import React from "react";
+import ToyCard from "./ToyCard";
 
-function ToyContainer({ toys, donateToy, likeToy }) {
-  return (
-    <div id="toy-collection">
-      {toys.map(toy => (
-        <ToyCard 
-          key={toy.id} 
-          toy={toy} 
-          donateToy={donateToy} 
-          likeToy={likeToy} 
-        />
-      ))}
-    </div>
-  );
+function ToyContainer({ toys, onDeleteToy, onUpdateToy }) {
+  const toyCards = toys.map((toy) => (
+    <ToyCard
+      key={toy.id}
+      toy={toy}
+      onDeleteToy={onDeleteToy}
+      onUpdateToy={onUpdateToy}
+    />
+  ));
+
+  return <div className="toy-container">{toyCards}</div>;
 }
 
 export default ToyContainer;

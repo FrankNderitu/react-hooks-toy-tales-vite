@@ -1,57 +1,60 @@
-import { useState } from 'react';
+import React, { useState } from "react";
 
-const API = "http://localhost:3001/toys";
+function ToyForm({ onAddToy }) {
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
 
-function ToyForm({ addToy }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    image: ""
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
 
-    fetch(API, {
+    const newToy = {
+      name: name,
+      image: image,
+      likes: 0,
+    };
+
+    fetch("http://localhost:3001/toys", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...formData, likes: 0 })
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newToy),
     })
-      .then(res => res.json())
-      .then(newToy => {
-        addToy(newToy);
-        setFormData({ name: "", image: "" });
-      });
-  };
+      .then((res) => res.json())
+      .then((toy) => onAddToy(toy));
+
+    setName("");
+    setImage("");
+  }
 
   return (
-    <div className="container">
-      <form onSubmit={handleSubmit} className="add-toy-form">
-        <h3>Create a toy!</h3>
+    <div className="new-toy-form">
+      <h2>Add a Toy</h2>
+
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
           placeholder="Enter a toy's name..."
           className="input-text"
-          value={formData.name}
-          onChange={handleChange}
-          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
-        <br />
+
         <input
           type="text"
           name="image"
           placeholder="Enter a toy's image URL..."
           className="input-text"
-          value={formData.image}
-          onChange={handleChange}
-          required
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
         />
-        <br />
-        <input type="submit" value="Create New Toy" className="submit" />
+
+        <input
+          type="submit"
+          value="Create New Toy"
+          className="submit"
+        />
       </form>
     </div>
   );
